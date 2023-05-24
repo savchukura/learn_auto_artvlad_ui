@@ -6,6 +6,7 @@ from locators.elements_page_locators import CheckBoxPageLocators
 from locators.elements_page_locators import RadioButtonPageLocators
 from locators.elements_page_locators import WebTablePageLocators
 from pages.base_page import BasePage
+from selenium.webdriver.common.by import By
 
 
 class TextBoxPage(BasePage):
@@ -114,4 +115,33 @@ class WebTablePage(BasePage):
         row = delete_button.find_element("xpath", WebTablePageLocators.ROW_PARENT)
         return row.text.splitlines()
 
+    def update_person_info(self):
+        person_info = next(generated_person())
+        age = person_info.age
+        self.element_is_visible(WebTablePageLocators.UPDATE_BUTTON).click()
+        self.element_is_visible(WebTablePageLocators.AGE_INPUT).clear()
+        self.element_is_visible(WebTablePageLocators.AGE_INPUT).send_keys(age)
+        self.element_is_visible(WebTablePageLocators.SUBMIT_BUTTON).click()
+        return str(age)
+
+    def delete_person(self):
+        self.element_is_visible(WebTablePageLocators.DELETE_BUTTON).click()
+
+    def check_deleted(self):
+        return self.element_is_present(WebTablePageLocators.NO_ROWS).text
+
+    def select_up_to_some_rows(self):
+        count = [5, 10, 20, 25, 50, 100]
+        data = []
+        for x in count:
+            count_row_button = self.element_is_visible(WebTablePageLocators.COUNT_ROW_LIST)
+            self.go_to_element(count_row_button)
+            count_row_button.click()
+            self.element_is_visible((By.CSS_SELECTOR, f"option[value='{x}")).click()
+            data.append(self.check_count_rows())
+        return data
+
+    def check_count_rows(self):
+        list_rows = self.elements_are_present(WebTablePageLocators.FULL_PEOPLE_LIST)
+        return len(list_rows)
 
