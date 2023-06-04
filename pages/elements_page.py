@@ -83,6 +83,7 @@ class RadioButtonPage(BasePage):
     def get_output_result(self):
         return self.element_is_present(RadioButtonPageLocators.OUTPUT_RESULT).text
 
+
 class WebTablePage(BasePage):
 
     def add_new_person(self):
