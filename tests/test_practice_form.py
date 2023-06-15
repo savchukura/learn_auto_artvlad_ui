@@ -2,6 +2,7 @@ import time
 import random
 from pages.practice_form_page import PracticeFormPage
 
+
 class TestForm:
     class TestFormPage:
 

@@ -41,3 +41,5 @@ class BasePage:
         action.context_click(element)
         action.perform()
 
+    def switch_to_another_window(self, window_num):
+        self.driver.switch_to.window(self.driver.window_handles[window_num])
