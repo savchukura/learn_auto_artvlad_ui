@@ -4,7 +4,7 @@ from selenium.common import UnexpectedAlertPresentException
 import time
 
 from pages.base_page import BasePage
-from locators.alerts_frame_windows_locators import BrowserWindowsPageLocators, AlertsPageLocators
+from locators.alerts_frame_windows_locators import BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators
 
 
 class BrowserWindowsPage(BasePage):
@@ -54,3 +54,26 @@ class AlertsPage(BasePage):
         alert_window.accept()
         text_result = self.element_is_present(AlertsPageLocators.PROMPT_RESULT).text
         return text, text_result
+
+
+class FramesPage(BasePage):
+
+    def check_frame(self, frame_num):
+        if frame_num == "frame1":
+            frame = self.element_is_present(FramesPageLocators.FIRST_FRAME)
+            width = frame.get_attribute('width')
+            height = frame.get_attribute('height')
+            self.driver.switch_to.frame(frame)
+            text = self.element_is_present(FramesPageLocators.TITLE_FRAME).text
+            self.driver.switch_to.default_content()
+            return [width, height, text]
+        if frame_num == "frame2":
+            frame = self.element_is_present(FramesPageLocators.SECOND_FRAME)
+            width = frame.get_attribute('width')
+            height = frame.get_attribute('height')
+            self.driver.switch_to.frame(frame)
+            text = self.element_is_present(FramesPageLocators.TITLE_FRAME).text
+            self.driver.switch_to.default_content()
+            return [width, height, text]
+
+
