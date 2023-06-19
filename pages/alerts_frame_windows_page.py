@@ -4,7 +4,7 @@ from selenium.common import UnexpectedAlertPresentException
 import time
 
 from pages.base_page import BasePage
-from locators.alerts_frame_windows_locators import BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators, NestedFramesPageLocators
+from locators.alerts_frame_windows_locators import BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators, NestedFramesPageLocators, ModalDialogsPageLocators
 
 
 class BrowserWindowsPage(BasePage):
@@ -87,6 +87,21 @@ class NestedFramesPage(BasePage):
         self.driver.switch_to.frame(child_frame)
         child_text = self.element_is_present(NestedFramesPageLocators.CHILD_TEXT).text
         return parent_text, child_text
+
+
+class ModalDialogsPage(BasePage):
+
+    def check_modal_dialogs(self):
+        self.element_is_visible(ModalDialogsPageLocators.SMALL_MODAL_BUTTON).click()
+        small_modal_title = self.element_is_visible(ModalDialogsPageLocators.SMALL_MODAL_TITLE).text
+        small_modal_text = self.element_is_visible(ModalDialogsPageLocators.SMALL_MODAL_TEXT).text
+        self.element_is_visible(ModalDialogsPageLocators.CLOSE_SMALL_MODAL_BUTTON).click()
+        self.element_is_visible(ModalDialogsPageLocators.LARGE_MODAL_BUTTON).click()
+        large_modal_title = self.element_is_visible(ModalDialogsPageLocators.LARGE_MODAL_TITLE).text
+        large_modal_text = self.element_is_visible(ModalDialogsPageLocators.LARGE_MODAL_TEXT).text
+        return [small_modal_title, len(small_modal_text)], [large_modal_title, len(large_modal_text)]
+
+
 
 
 

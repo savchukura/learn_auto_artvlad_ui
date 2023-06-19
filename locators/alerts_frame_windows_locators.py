@@ -34,4 +34,16 @@ class NestedFramesPageLocators:
     CHILD_TEXT = (By.CSS_SELECTOR, "p")
 
 
+class ModalDialogsPageLocators:
+    SMALL_MODAL_BUTTON = (By.CSS_SELECTOR, "button[id='showSmallModal']")
+    CLOSE_SMALL_MODAL_BUTTON = (By.CSS_SELECTOR, "button[id='closeSmallModal']")
+    SMALL_MODAL_TEXT = (By.CSS_SELECTOR, "div[class='modal-body']")
+    SMALL_MODAL_TITLE = (By.CSS_SELECTOR, "div[id='example-modal-sizes-title-sm']")
+
+    LARGE_MODAL_BUTTON = (By.CSS_SELECTOR, "button[id='showLargeModal']")
+    CLOSE_LARGE_MODAL_BUTTON = (By.CSS_SELECTOR, "button[id='closeLargeModal']")
+    LARGE_MODAL_TEXT = (By.CSS_SELECTOR, "div[class='modal-body'] p")
+    LARGE_MODAL_TITLE = (By.CSS_SELECTOR, "div[id='example-modal-sizes-title-lg']")
+
+
 
