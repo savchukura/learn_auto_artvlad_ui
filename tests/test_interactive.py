@@ -15,4 +15,4 @@ class TestInteractions:
             sortable_page = SortablePage(driver, "https://demoqa.com/sortable")
             sortable_page.open()
             before, after = sortable_page.change_grid_order()
-            assert before != after, ""
+            assert before != after, "s"
