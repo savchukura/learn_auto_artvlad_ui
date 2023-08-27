@@ -1,7 +1,8 @@
 import random
 
 from pages.base_page import BasePage
-from locators.interactive_page_locators import SortablePageLocators
+from locators.interactive_page_locators import SortablePageLocators, SelectablePageLocators, ResizablePageLocators
+
 
 class SortablePage(BasePage):
 
@@ -28,3 +29,51 @@ class SortablePage(BasePage):
         self.action_drag_and_drop_to_element(item_what, item_where)
         order_after = self.get_sortable_items(SortablePageLocators.GRID_LIST)
         return order_before, order_after
+
+
+class SelectablePage(BasePage):
+
+    def click_selectable_item(self, elements):
+        item_list = self.elements_are_visible(elements)
+        random.sample(item_list, k=1)[0].click()
+
+    def select_list_item(self):
+        self.element_is_visible(SelectablePageLocators.TAB_LIST).click()
+        self.click_selectable_item(SelectablePageLocators.LIST_ITEM)
+        active_element = self.element_is_visible(SelectablePageLocators.LIST_ITEM_ACTIVE)
+        return active_element.text
+
+    def select_grid_item(self):
+        self.element_is_visible(SelectablePageLocators.TAB_GRID).click()
+        self.click_selectable_item(SelectablePageLocators.GRID_ITEM)
+        active_element = self.element_is_visible(SelectablePageLocators.GRID_ITEM_ACTIVE)
+        return active_element.text
+
+
+class ResizablePage(BasePage):
+
+    def get_px_from_width_height(self, value_of_size):
+        width = value_of_size.split(';')[0].split(':')[1].replace(' ', '')
+        height = value_of_size.split(';')[1].split(':')[1].replace(' ', '')
+        return width, height
+
+    def get_max_min_size(self, element):
+        size = self.element_is_present(element)
+        size_value = size.get_attribute('style')
+        return size_value
+
+    def change_size_resizable_box(self):
+        self.action_drag_and_drop_by_offset(self.element_is_present(ResizablePageLocators.RESIZABLE_BOX_HANDLE), 400, 200)
+        max_size = self.get_px_from_width_height(self.get_max_min_size(ResizablePageLocators.RESIZABLE_BOX))
+        self.action_drag_and_drop_by_offset(self.element_is_present(ResizablePageLocators.RESIZABLE_BOX_HANDLE), -400, -200)
+        min_size = self.get_px_from_width_height(self.get_max_min_size(ResizablePageLocators.RESIZABLE_BOX))
+        return max_size, min_size
+
+    def change_size_resizable(self):
+        self.action_drag_and_drop_by_offset(self.element_is_present(ResizablePageLocators.RESIZABLE_HANDLE),
+                                            random.randint(1, 300), random.randint(1, 300))
+        max_size = self.get_px_from_width_height(self.get_max_min_size(ResizablePageLocators.RESIZABLE))
+        self.action_drag_and_drop_by_offset(self.element_is_present(ResizablePageLocators.RESIZABLE_HANDLE),
+                                            random.randint(-200, -1), random.randint(-200, -1))
+        min_size = self.get_px_from_width_height(self.get_max_min_size(ResizablePageLocators.RESIZABLE))
+        return max_size, min_size
