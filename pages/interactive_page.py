@@ -1,7 +1,8 @@
 import random
 
 from pages.base_page import BasePage
-from locators.interactive_page_locators import SortablePageLocators, SelectablePageLocators, ResizablePageLocators
+from locators.interactive_page_locators import SortablePageLocators, SelectablePageLocators, ResizablePageLocators, DroppablePageLocators
+import time
 
 
 class SortablePage(BasePage):
@@ -77,3 +78,43 @@ class ResizablePage(BasePage):
                                             random.randint(-200, -1), random.randint(-200, -1))
         min_size = self.get_px_from_width_height(self.get_max_min_size(ResizablePageLocators.RESIZABLE))
         return max_size, min_size
+
+
+class DroppablePage(BasePage):
+
+    def drop_simple(self):
+        self.element_is_visible(DroppablePageLocators.SIMPLE_TAB).click()
+        drag_div = self.element_is_visible(DroppablePageLocators.DRAG_ME_SIMPLE)
+        drop_div = self.element_is_visible(DroppablePageLocators.DROP_HERE_SIMPLE)
+        self.action_drag_and_drop_to_element(drag_div, drop_div)
+        return drop_div.text
+
+    def drop_accept(self, div):
+        self.element_is_visible(DroppablePageLocators.ACCEPT_TAB).click()
+        divs = {"acceptable": DroppablePageLocators.ACCEPTABLE,
+                "not_acceptable_div": DroppablePageLocators.NOT_ACCEPTABLE}
+        drop_div = self.element_is_visible(DroppablePageLocators.DROP_HERE_ACCEPT)
+        self.action_drag_and_drop_to_element(self.element_is_visible(divs[div]), drop_div)
+        return drop_div.text
+
+    def drop_prevent(self, drop):
+        self.element_is_visible(DroppablePageLocators.PREVENT_TAB).click()
+        drag_div = self.element_is_visible(DroppablePageLocators.DRAG_ME_PREVENT)
+        drops = {"outer_droppable_top": DroppablePageLocators.NOT_GREEDY_DROP_BOX_TEXT,
+                 "inner_droppable_top": DroppablePageLocators.NOT_GREEDY_INNER_BOX,
+                 "outer_droppable_bot": DroppablePageLocators.GREEDY_DROP_BOX_TEXT,
+                 "inner_droppable_bot": DroppablePageLocators.GREEDY_INNER_BOX}
+        self.action_drag_and_drop_to_element(drag_div, self.element_is_visible(drops[drop]))
+        drop_text = self.element_is_visible(drops[drop])
+        return drop_text.text
+
+    def drop_will_revert(self):
+        self.element_is_visible(DroppablePageLocators.REVERT_TAB).click()
+        will_revert = self.element_is_visible(DroppablePageLocators.WILL_REVERT)
+        drop_div = self.element_is_visible(DroppablePageLocators.DROP_HERE_REVERT)
+        self.action_drag_and_drop_to_element(will_revert, drop_div)
+        position_after_move = will_revert.get_attribute('style')
+        time.sleep(1)
+        position_after_revert = will_revert.get_attribute('style')
+        return position_after_move, position_after_revert
+

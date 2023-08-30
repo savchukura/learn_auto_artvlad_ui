@@ -1,4 +1,6 @@
-from pages.interactive_page import SortablePage, SelectablePage, ResizablePage
+import time
+
+from pages.interactive_page import SortablePage, SelectablePage, ResizablePage, DroppablePage
 #from conftest import *
 
 
@@ -39,3 +41,54 @@ class TestInteractions:
             print(max_resize, min_resize)
             assert ('500px', '300px') == max_box
             assert ('150px', '150px') == min_box
+
+    class TestDroppablePage:
+
+        def test_simple_droppable(self, driver):
+            droppable_page = DroppablePage(driver, "https://demoqa.com/droppable")
+            droppable_page.open()
+            text = droppable_page.drop_simple()
+            assert text == "Dropped!"
+
+        def test_accept_droppable(self, driver):
+            droppable_page = DroppablePage(driver, "https://demoqa.com/droppable")
+            droppable_page.open()
+            text = droppable_page.drop_accept("acceptable")
+            assert text == "Dropped!"
+
+        def test_not_accept_droppable(self, driver):
+            droppable_page = DroppablePage(driver, "https://demoqa.com/droppable")
+            droppable_page.open()
+            text = droppable_page.drop_accept("not_acceptable_div")
+            assert text == "Drop here"
+
+        def test_propogation_outer_droppable_top(self, driver):
+            droppable_page = DroppablePage(driver, "https://demoqa.com/droppable")
+            droppable_page.open()
+            text = droppable_page.drop_prevent("outer_droppable_top")
+            assert text == "Dropped!"
+
+        def test_propogation_inner_droppable_top(self, driver):
+            droppable_page = DroppablePage(driver, "https://demoqa.com/droppable")
+            droppable_page.open()
+            text = droppable_page.drop_prevent("inner_droppable_top")
+            assert text == "Dropped!"
+
+        def test_propogation_outer_droppable_bot(self, driver):
+            droppable_page = DroppablePage(driver, "https://demoqa.com/droppable")
+            droppable_page.open()
+            text = droppable_page.drop_prevent("outer_droppable_bot")
+            assert text == "Dropped!"
+
+        def test_propogation_inner_droppable_bot(self, driver):
+            droppable_page = DroppablePage(driver, "https://demoqa.com/droppable")
+            droppable_page.open()
+            text = droppable_page.drop_prevent("inner_droppable_bot")
+            assert text == "Dropped!"
+
+        def test_revert_draggable_droppable(self, driver):
+            droppable_page = DroppablePage(driver, "https://demoqa.com/droppable")
+            droppable_page.open()
+            will_after_move, will_after_revert = droppable_page.drop_will_revert()
+            print(will_after_move)
+            print(will_after_revert)
