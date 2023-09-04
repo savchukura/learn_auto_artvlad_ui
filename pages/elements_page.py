@@ -2,7 +2,7 @@ import base64
 import os
 import random
 import time
-
+import allure
 import requests
 from selenium.common import TimeoutException
 
@@ -17,25 +17,29 @@ from selenium.webdriver.common.by import By
 
 class TextBoxPage(BasePage):
 
+    @allure.step('Fill in all Fields')
     def fill_all_fields(self):
         person_info = next(generated_person())
         full_name = person_info.full_name
         email = person_info.email
         current_address = person_info.current_address
         permanent_address = person_info.permanent_address
-        self.element_is_visible(TextBoxPageLocators.FULL_NAME).send_keys(full_name)
-        self.element_is_visible(TextBoxPageLocators.EMAIL).send_keys(email)
-        self.element_is_visible(TextBoxPageLocators.CURRENT_ADDRESS).send_keys(current_address)
-        self.element_is_visible(TextBoxPageLocators.PERMANENT_ADDRESS).send_keys(permanent_address)
-        self.element_is_visible(TextBoxPageLocators.SUBMIT).click()
-        return full_name, email, current_address, permanent_address
+        with allure.step('filling fields'):
+            self.element_is_visible(TextBoxPageLocators.FULL_NAME).send_keys(full_name)
+            self.element_is_visible(TextBoxPageLocators.EMAIL).send_keys(email)
+            self.element_is_visible(TextBoxPageLocators.CURRENT_ADDRESS).send_keys(current_address)
+            self.element_is_visible(TextBoxPageLocators.PERMANENT_ADDRESS).send_keys(permanent_address)
+        with allure.step('click Submit button'):
+            self.element_is_visible(TextBoxPageLocators.SUBMIT).click()
+
+        return full_name, email, current_address.replace('\n', ' '), permanent_address#.replace('\n', ' ')
 
     def check_filled_form(self):
         full_name = self.element_is_present(TextBoxPageLocators.CREATED_FULL_NAME).text.split(':')[1]
         email = self.element_is_present(TextBoxPageLocators.CREATED_EMAIL).text.split(':')[1]
         current_address = self.element_is_present(TextBoxPageLocators.CREATED_CURRENT_ADDRESS).text.split(':')[1]
         permanent_address = self.element_is_present(TextBoxPageLocators.CREATED_PERMANENT_ADDRESS).text.split(':')[1]
-        return full_name, email, current_address, permanent_address
+        return full_name, email, current_address.replace('\n', ' '), permanent_address.replace('\n', ' ')
 
 
 class CheckBoxPage(BasePage):
