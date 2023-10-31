@@ -1,5 +1,7 @@
 import random
 from selenium.webdriver.common.keys import Keys
+
+from locators.elements_page_locators import WebTablePageLocators
 from locators.practice_form_locators import PracticeFormPageLocators
 from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
