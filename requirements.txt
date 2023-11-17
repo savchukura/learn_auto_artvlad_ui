@@ -4,5 +4,3 @@ webdriver-manager==4.0.0
 Faker~=19.2.0
 requests~=2.30.0
 
-pywin32==300
-pywinauto==0.6.8
