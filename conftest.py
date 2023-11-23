@@ -9,8 +9,11 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 @pytest.fixture(scope="function")
 def driver():
-    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-    driver.maximize_window()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(options=chrome_options, service=ChromeService(ChromeDriverManager().install()))
+    #driver.maximize_window()
+
     yield driver
     attach = driver.get_screenshot_as_png()
     allure.attach(attach, name=f"Screenshot {datetime.today()}", attachment_type=allure.attachment_type.PNG)
